@@ -1,0 +1,50 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    circuitbreakers:
+      enabled: true
+
+spring:
+  application.name: api-gateway
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 486663611800-fsbj4qjnq4jovel69lrbgrdk91ljdc7l.apps.googleusercontent.com
+#            client-secret: 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
+#            authorization-grant-type: authorization_code
+#            scope:
+#              - openid
+#              - profile
+#              - email
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      movie-cb:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+      rating-cb:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+  timelimiter:
+    instances:
+      movie-cb:
+        timeoutDuration: 1s
+      rating-cb:
+        timeoutDuration: 1s
+
+server:
+  port: 8888
+
+logging:
+  level:
+    root: INFO
