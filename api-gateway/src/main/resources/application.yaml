@@ -9,18 +9,20 @@ management:
 
 spring:
   application.name: api-gateway
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 486663611800-fsbj4qjnq4jovel69lrbgrdk91ljdc7l.apps.googleusercontent.com
-#            client-secret: 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
-#            authorization-grant-type: authorization_code
-#            scope:
-#              - openid
-#              - profile
-#              - email
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            provider: google
+            client-id: 486663611800-fsbj4qjnq4jovel69lrbgrdk91ljdc7l.apps.googleusercontent.com
+            client-secret: ${google-secret}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
 
 resilience4j:
   circuitbreaker:

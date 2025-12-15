@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.context.annotation.Bean
-
+import org.springframework.http.HttpHeaders
 
 @SpringBootApplication
 class ApiGatewayApplication {
@@ -18,16 +18,18 @@ class ApiGatewayApplication {
     lateinit var ratingServiceUri: String
 
     @Bean
-    fun routes(builder: RouteLocatorBuilder): RouteLocator =
+    fun customRouteLocator(builder: RouteLocatorBuilder): RouteLocator =
         builder.routes()
             .route("movie-service") { spec ->
                 spec
-                    .path("/api/movies/**")
+                    .path("/api/movies", "/api/movies/**")
                     .filters { filterSpec ->
                         filterSpec.circuitBreaker { config -> config.setName("movie-cb") }
+                        filterSpec.rewritePath("/api/movies", "/movies")
                         filterSpec.rewritePath("/api/movies/(?<segment>.*)", $$"/movies/${segment}")
-//                        filterSpec.tokenRelay()
-//                        filterSpec.removeRequestHeader(HttpHeaders.COOKIE)
+//                        filterSpec.tokenRelay() // For JWT based access token forward
+                        filterSpec.filter(IdTokenRelay().apply( {}))
+                        filterSpec.removeRequestHeader(HttpHeaders.COOKIE)
                     }
                     .uri(movieServiceUri)
             }
@@ -41,7 +43,6 @@ class ApiGatewayApplication {
                     .uri(ratingServiceUri)
             }
             .build()
-
 }
 
 fun main(args: Array<String>) {
