@@ -15,6 +15,7 @@ class SecurityConfig {
         http
             .authorizeExchange { it.anyExchange().authenticated() }
             .oauth2Login ( Customizer.withDefaults() )
+            .oauth2ResourceServer { it.jwt(Customizer.withDefaults()) }
             .logout { it.logoutUrl("/logout") }
             .build()
 }

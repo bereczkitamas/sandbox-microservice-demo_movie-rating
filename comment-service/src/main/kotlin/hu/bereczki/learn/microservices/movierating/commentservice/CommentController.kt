@@ -12,7 +12,7 @@ class CommentController(val commentIndexSearch: CommentIndexSearch, val restTemp
     fun comments(@RequestParam keywords: String = "Tyrell"): List<Map<*, *>?> {
         return commentIndexSearch.commentsByKeywordsearch(keywords)
             .map {
-                restTemplate.getForObject("http://localhost:8081/movies/${it["movie_id"]}", Map::class.java)
+                restTemplate.getForObject("http://localhost:8888/api/movies/${it["movie_id"]}", Map::class.java)
             }
     }
 
