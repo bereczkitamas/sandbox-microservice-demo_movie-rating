@@ -1,5 +1,7 @@
 package hu.bereczki.learn.microservices.movierating.apigateway
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
@@ -19,9 +21,11 @@ class IdTokenRelay : AbstractGatewayFilterFactory<Any>() {
                 .cast(OAuth2AuthenticationToken::class.java)
                 .filter { authToken: OAuth2AuthenticationToken -> authToken.principal is OidcUser }
                 .map { it.principal as OidcUser }
-                .map { oidcUser -> exchange
+                .map { it.idToken.tokenValue }
+                .doOnNext { logger.debug("Relaying ID token: {}", it) }
+                .map { tokenValue -> exchange
                     .mutate()
-                    .request { r -> r.headers { headers -> headers.setBearerAuth(oidcUser.idToken.tokenValue) } }
+                    .request { r -> r.headers { headers -> headers.setBearerAuth(tokenValue) } }
                     .build()
                 }
                 .defaultIfEmpty(exchange)
@@ -29,3 +33,5 @@ class IdTokenRelay : AbstractGatewayFilterFactory<Any>() {
         }
     }
 }
+
+val logger: Logger = LoggerFactory.getLogger(IdTokenRelay::class.java)
