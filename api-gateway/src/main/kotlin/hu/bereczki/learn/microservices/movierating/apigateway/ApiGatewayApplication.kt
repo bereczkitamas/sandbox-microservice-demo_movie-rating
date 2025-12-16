@@ -39,7 +39,10 @@ class ApiGatewayApplication {
                     .path("/api/ratings/**")
                     .filters { filterSpec ->
                         filterSpec.circuitBreaker { config -> config.setName("rating-cb") }
-                        filterSpec.rewritePath("/api/ratings/(?<segment>.*)", $$"/ratings/${segment}")
+                        filterSpec.rewritePath("/api/ratings/(?<segment>.*)", $$"/comments/${segment}")
+//                        filterSpec.tokenRelay() // For JWT based access token forward
+                        filterSpec.filter(IdTokenRelay().apply( {}))
+                        filterSpec.removeRequestHeader(HttpHeaders.COOKIE)
                     }
                     .uri(ratingServiceUri)
             }
