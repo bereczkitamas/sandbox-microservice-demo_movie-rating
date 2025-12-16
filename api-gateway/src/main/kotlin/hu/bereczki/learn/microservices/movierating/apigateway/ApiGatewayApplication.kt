@@ -1,5 +1,6 @@
 package hu.bereczki.learn.microservices.movierating.apigateway
 
+import co.elastic.otel.agent.attach.RuntimeAttach
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -46,5 +47,6 @@ class ApiGatewayApplication {
 }
 
 fun main(args: Array<String>) {
+    RuntimeAttach.attachJavaagentToCurrentJvm()
     runApplication<ApiGatewayApplication>(*args)
 }

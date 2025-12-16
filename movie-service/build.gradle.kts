@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+    implementation("co.elastic.otel:elastic-otel-runtime-attach:1.8.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")

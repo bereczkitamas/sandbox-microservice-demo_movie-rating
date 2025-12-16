@@ -22,6 +22,7 @@ repositories {
 extra["springCloudVersion"] = "2025.1.0"
 
 dependencies {
+    implementation("co.elastic.otel:elastic-otel-runtime-attach:1.8.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
     implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webflux")
